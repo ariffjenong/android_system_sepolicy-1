@@ -1047,6 +1047,7 @@ $(built_sepolicy_neverallows)
 	@mkdir -p $(dir $@)
 	$(hide) $< -m -M true -G -c $(POLICYVERS) $(PRIVATE_NEVERALLOW_ARG) $(PRIVATE_CIL_FILES) -o $@.tmp -f /dev/null
 	$(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze $@.tmp permissive > $@.permissivedomains
+	$(hide) sed -i '/backuptool/d' $@.permissivedomains
 	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
 		echo "==========" 1>&2; \
 		echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
@@ -1108,6 +1109,7 @@ $(LOCAL_BUILT_MODULE): $(sepolicy.recovery.conf) $(HOST_OUT_EXECUTABLES)/checkpo
 	$(hide) $(CHECKPOLICY_ASAN_OPTIONS) $(HOST_OUT_EXECUTABLES)/checkpolicy -M -c \
 		$(POLICYVERS) -o $@.tmp $<
 	$(hide) $(HOST_OUT_EXECUTABLES)/sepolicy-analyze $@.tmp permissive > $@.permissivedomains
+	$(hide) sed -i '/backuptool/d' $@.permissivedomains
 	$(hide) if [ "$(TARGET_BUILD_VARIANT)" = "user" -a -s $@.permissivedomains ]; then \
 		echo "==========" 1>&2; \
 		echo "ERROR: permissive domains not allowed in user builds" 1>&2; \
